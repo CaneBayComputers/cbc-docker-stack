@@ -1,0 +1,70 @@
+services:
+
+  db:
+    image: mariadb
+    container_name: cbs-mariadb
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+    volumes:
+      - vol-cbs-docker-stack:/var/lib/mysql
+    restart: always
+    networks:
+      vpcbr:
+        ipv4_address: 10.2.0.2
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: cbs-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: 10.2.0.2
+      PMA_USER: root
+      UPLOAD_LIMIT: 256M
+    networks:
+      vpcbr:
+        ipv4_address: 10.2.0.3
+
+  mongo:
+    image: mongo
+    container_name: cbs-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      vpcbr:
+        ipv4_address: 10.2.0.4
+
+  redis:
+    image: redis
+    container_name: cbs-redis
+    restart: always
+    networks:
+      vpcbr:
+        ipv4_address: 10.2.0.5
+
+  exim4:
+    image: imixs/exim4
+    container_name: cbs-exim4
+    restart: always
+    expose:
+      - "25"
+    environment:
+      EXIM_SMARTHOST: "${EXIM_SMARTHOST}"
+      EXIM_PASSWORD: "${EXIM_PASSWORD}"
+      EXIM_ALLOWED_SENDERS: "0.0.0.0/0"
+    networks:
+      vpcbr:
+        ipv4_address: 10.2.0.6
+
+volumes:
+  vol-cbs-docker-stack:
+    external: true
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.2.0.0/16
+         gateway: 10.2.0.1
