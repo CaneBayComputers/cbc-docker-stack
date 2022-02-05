@@ -2,11 +2,11 @@ services:
 
   db:
     image: mariadb
-    container_name: cbs-mariadb
+    container_name: cbc-mariadb
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
     volumes:
-      - vol-cbs-docker-stack:/var/lib/mysql
+      - vol-cbc-docker-stack:/var/lib/mysql
     restart: always
     networks:
       vpcbr:
@@ -14,7 +14,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: cbs-phpmyadmin
+    container_name: cbc-phpmyadmin
     restart: always
     environment:
       PMA_HOST: 10.2.0.2
@@ -26,7 +26,7 @@ services:
 
   mongo:
     image: mongo
-    container_name: cbs-mongo
+    container_name: cbc-mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -37,7 +37,7 @@ services:
 
   redis:
     image: redis
-    container_name: cbs-redis
+    container_name: cbc-redis
     restart: always
     networks:
       vpcbr:
@@ -45,7 +45,7 @@ services:
 
   exim4:
     image: imixs/exim4
-    container_name: cbs-exim4
+    container_name: cbc-exim4
     restart: always
     expose:
       - "25"
@@ -58,7 +58,7 @@ services:
         ipv4_address: 10.2.0.6
 
 volumes:
-  vol-cbs-docker-stack:
+  vol-cbc-docker-stack:
     external: true
 
 networks:
